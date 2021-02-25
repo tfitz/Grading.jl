@@ -1,0 +1,8 @@
+name = "Grading"
+uuid = "f7c44713-583a-43b2-b900-420c93e1e91c"
+authors = ["tim <fitzgeraldt@gonzaga.edu>"]
+version = "0.1.0"
+
+[deps]
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+XLSX = "fdbf4ff8-1666-58a4-91e7-1b58723a45e0"
