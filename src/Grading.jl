@@ -74,6 +74,24 @@ function computeScore(row, list::Array{category,1} )
 
 end
 
+function computeEachFinalScore!(data, list::Array{category,1}; ColumnName="Final Score" )
+
+    if !checkTotalWeights(list)
+        error("Sum of weights is not 1.0")
+    end
+
+    data[!, Symbol(ColumnName)] .= [ computeScore(row, list::Array{category,1} ) for row in eachrow(data) ]
+
+end
+
+function computeEachCategoryScore!(data::DataFrames.DataFrame, list::Array{category,1} )
+    
+    for item in list
+         data[!, Symbol(item.Name)] .= [ computeDropMean(normalize_row(row, item), item.numberToDrop ) for row in eachrow(data) ]
+    end
+
+end
+
 function importGradescopeXSLX(infilename::String; SheetName = "Course Grades")
     data0 = XLSX.readxlsx(infilename)[SheetName]
     data = XLSX.eachtablerow(data0) |> DataFrames.DataFrame
@@ -86,4 +104,4 @@ function exportGradeSheet(outfilename::String, data; SheetName = "Course Grades"
 
 end
 
-end # module
+end
