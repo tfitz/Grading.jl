@@ -59,10 +59,6 @@ end
 
 function computeScore(row, list::Array{category,1} )
 
-    if !checkTotalWeights(list)
-        error("Sum of weights is not 1.0")
-    end
-
     score = 0.
     for item in list
         data = normalize_row(row, item)
@@ -107,12 +103,7 @@ end
 
 function computeEachWhatIfScore(row, list0::Array{category,1}, final::category, what_if_values::Array{Float64, 1}  )
     
-    score = 0.
-    for item in list0
-        data = normalize_row(row, item)
-        local_score = computeDropMean(data, item.numberToDrop )
-        score += item.weight*local_score
-    end
+    score = computeScore(row, list0 )
 
     final_scores = [ (v - score)/final.weight for v in what_if_values ]
 
