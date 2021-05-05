@@ -104,4 +104,31 @@ function exportGradeSheet(outfilename::String, data; SheetName = "Course Grades"
 
 end
 
+
+function computeEachWhatIfScore(row, list0::Array{category,1}, final::category, what_if_values::Array{Float64, 1}  )
+    
+    score = 0.
+    for item in list0
+        data = normalize_row(row, item)
+        local_score = computeDropMean(data, item.numberToDrop )
+        score += item.weight*local_score
+    end
+
+    final_scores = [ (v - score)/final.weight for v in what_if_values ]
+
+    return final_scores
+
+end
+
+
+function computeWhatIfFinalScore!(data, list0::Array{category,1}, final::category; what_if_values=[0.6, 0.7, 0.8, 0.9], ColumnName="Final What If" )
+    
+    if !checkTotalWeights( vcat(list0, final) )
+        error("Sum of weights is not 1.0")
+    end
+
+    data[!, Symbol(ColumnName)] .= [ computeEachWhatIfScore(row, list0, final, what_if_values) for row in eachrow(data) ]
+
+end
+
 end
